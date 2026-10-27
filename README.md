@@ -1,15 +1,18 @@
 # Stock Market Predictor
 
-A Jupyter notebook project that pulls historical S&P 500 data and explores whether past price behaviour can be used to predict future movements.
+A Jupyter notebook project that pulls historical S&P 500 data and tests whether past price behaviour can be used to predict future movements.
 
 > **Status:** work in progress. This is a learning project, not financial advice.
 
-## What it does
+## What's been done so far
 
-- Downloads the full price history for the S&P 500 index (`^GSPC`) from Yahoo Finance using `yfinance`
-- Loads and cleans the data with `pandas`
-- Plots the closing price over time with `matplotlib`
-- Builds and evaluates a prediction model with `scikit-learn` *(update this line as the model develops)*
+1. **Downloaded the data:** full S&P 500 (`^GSPC`) price history from Yahoo Finance using `yfinance`
+2. **Cleaned and visualised it:** removed unneeded columns, plotted the closing price over time
+3. **Set up the ML target:** whether the market closes higher the next day (1) or not (0)
+4. **Trained an initial model** with `scikit-learn`
+5. **Evaluated the errors** to see where the model was going wrong
+6. **Built a backtest:** a way to test the model on past data it hasn't seen, so results aren't flattered by training on the answers
+7. **Improved the model with extra predictors:** rolling-average ratios and recent-trend counts over several time horizons (2, 5, 60, 250 and 1000 days), reaching an accuracy of **0.57**
 
 ## Tech stack
 
@@ -62,18 +65,45 @@ Then open `stock_market_predictor.ipynb`.
 └── README.md
 ```
 
-## Notes
+## Ideas for improving the model
 
-- Data comes from Yahoo Finance via `yfinance`. If a download fails, it's usually rate limiting or a change on Yahoo's side rather than a bug in the notebook.
-- Index tickers on Yahoo use a caret, so the S&P 500 is `^GSPC`, not `GSPC`.
-- `yfinance` currently prints some pandas deprecation warnings. These come from the library itself and don't affect the results.
+I plan to extend this project and keep pushing the accuracy up. Ideas so far:
+
+### 1. News and article data
+Price alone ignores what's happening in the world. Adding signals from news articles (for example, sentiment scores or counts of events like tariffs, sanctions or disruptions) could give the model information that price history can't.
+
+This links to **SupplySphere**, a supply-chain disruption prediction concept I developed during my Microsoft work experience. SupplySphere tracks things like trade policy and tariffs, geopolitical conflict, sanctions, extreme weather, cyber threats and economic instability, using sources such as UN Comtrade, World Bank Open Data, OFAC and NOAA. Many of those same signals move markets, so some could be reused here as extra predictors, such as tariff changes, PMI, inflation and interest rates.
+
+### 2. More frequent / real-time data
+Daily data limits how much the model can learn. Higher-frequency data (hourly, or roughly 12-hourly) would give more rows and let the model react faster. `yfinance` supports intraday intervals, though only for a limited look-back window, so a proper real-time source may be needed later.
+
+### 3. Better evaluation
+- Compare against a simple benchmark (for example, always predicting "up") to see how much the model actually adds
+- Look at precision as well as accuracy
+- Try other models and tune their settings
+
+### 4. Turn it into a portfolio platform
+Link this with my JavaScript work, including **Dangerfy** (a staged-alert escalation logic simulator), to build a web front end for viewing predictions, backtest results and alerts in one place. Dangerfy needs finishing first.
 
 ## Roadmap
 
-- [ ] Add feature engineering (returns, moving averages, etc.)
-- [ ] Train and evaluate a baseline model
-- [ ] Compare against a simple "no change" benchmark
-- [ ] Document results and limitations
+- [x] Download and clean S&P 500 data
+- [x] Visualise the data
+- [x] Set up the prediction target
+- [x] Train an initial model
+- [x] Evaluate errors
+- [x] Build a backtest
+- [x] Add extra predictors (accuracy 0.57)
+- [ ] Add news / article-based features
+- [ ] Explore higher-frequency or real-time data
+- [ ] Compare against a naive benchmark
+- [ ] Build a front-end dashboard
+
+## Notes
+
+- Index tickers on Yahoo use a caret, so the S&P 500 is `^GSPC`, not `GSPC`.
+- If a `yfinance` download fails, it's usually rate limiting or a change on Yahoo's side rather than a bug in the notebook.
+- `yfinance` currently prints some pandas deprecation warnings. These come from the library itself and don't affect the results.
 
 ## Disclaimer
 
