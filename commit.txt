@@ -1,2 +1,2 @@
 loop for commits:
-git add ., git commit -m "what you did", git push.
+git add ., git commit -m " ", git push.
