@@ -12,7 +12,7 @@ A Jupyter notebook project that pulls historical S&P 500 data and tests whether 
 4. **Trained an initial model** with `scikit-learn`
 5. **Evaluated the errors** to see where the model was going wrong
 6. **Built a backtest:** a way to test the model on past data it hasn't seen, so results aren't flattered by training on the answers
-7. **Improved the model with extra predictors:** rolling-average ratios and recent-trend counts over several time horizons (2, 5, 60, 250 and 1000 days), reaching an accuracy of **0.57**
+7. **Improved the model with extra predictors:** rolling-average ratios and recent-trend counts over several time horizons (2, 5, 60, 250 and 1000 days), using a random forest that only predicts "up" when it is at least 60% confident. Backtest precision rose from 0.53 to **0.575**. The market rises on about 53.7% of days, so that is the baseline to beat
 
 ## Tech stack
 
@@ -78,9 +78,10 @@ This links to **SupplySphere**, a supply-chain disruption prediction concept I d
 Daily data limits how much the model can learn. Higher-frequency data (hourly, or roughly 12-hourly) would give more rows and let the model react faster. `yfinance` supports intraday intervals, though only for a limited look-back window, so a proper real-time source may be needed later.
 
 ### 3. Better evaluation
-- Compare against a simple benchmark (for example, always predicting "up") to see how much the model actually adds
-- Look at precision as well as accuracy
-- Try other models and tune their settings
+- The model's 0.575 precision beats the 0.537 "always predict up" baseline by only a few points, so check whether the gap holds up on different time periods
+- Look at accuracy and recall as well as precision, since precision only covers the ~885 days (out of ~5,800) where the model calls "up"
+- Tune the 0.6 confidence threshold and the model settings, using a validation period that is separate from the final backtest
+- Try other models
 
 ### 4. Turn it into a portfolio platform
 Link this with my JavaScript work, including **Dangerfy** (a staged-alert escalation logic simulator), to build a web front end for viewing predictions, backtest results and alerts in one place. Dangerfy needs finishing first.
@@ -93,10 +94,10 @@ Link this with my JavaScript work, including **Dangerfy** (a staged-alert escala
 - [x] Train an initial model
 - [x] Evaluate errors
 - [x] Build a backtest
-- [x] Add extra predictors (accuracy 0.57)
+- [x] Add extra predictors (precision 0.575)
 - [ ] Add news / article-based features
 - [ ] Explore higher-frequency or real-time data
-- [ ] Compare against a naive benchmark
+- [x] Compare against a naive benchmark (up days are 53.7% of the total)
 - [ ] Build a front-end dashboard
 
 ## Notes
